@@ -4,12 +4,36 @@ const mongoose = require("mongoose");
 const userRouter = require("./routes/userRoutes");
 const messageRouter = require("./routes/messageRoutes");
 const socket = require("socket.io");
+const multer = require('multer');
 
 require("dotenv").config();
 const app = express();
 
+const storage = multer.diskStorage({
+  destination: (_,__,cb) =>{
+    cb(null,'avatars');
+  },
+  filename:(_,file,cb) =>{
+    cb(null,file.originalname);
+  }
+})
+const upload = multer({storage});
+
 app.use(cors());
 app.use(express.json());
+
+app.use('/avatars',express.static('avatars'));
+app.post('/avatars',upload.single('avatar'), (req,res)=>{
+  try {
+    res.json({
+      url: `/avatars/${req.file.originalname}`,
+    })
+  } catch (error) {
+    res.status(500).json({
+      msg: 'Не удалось загрузить файл'
+    })
+  }
+})
 
 app.use("/", userRouter);
 app.use("/chat", messageRouter);

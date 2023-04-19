@@ -91,6 +91,23 @@ module.exports.login = async (req, res) => {
   }
 };
 
+module.exports.updateAvatar = async (req,res) =>{
+  try {
+    await userModel.updateOne({
+      _id:req.userId
+    },{
+      avatarUrl: req.body.url
+    })
+    res.json({
+      success: true
+    })
+  } catch (error) {
+    res.status(500).json({
+      msg: 'Не удалось обновить аватар!'
+    })
+  }
+}
+
 module.exports.getMe = async (req, res) => {
   try {
     const user = await userModel.findById(req.userId);
