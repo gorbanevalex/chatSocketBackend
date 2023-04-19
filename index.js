@@ -52,7 +52,7 @@ mongoose
 
 const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://62.113.104.159:3000",
     credentials: true,
   },
 });
